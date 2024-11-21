@@ -13,30 +13,28 @@ from backend.lyrics import Lyrics, LyricsData
 from backend.fetcher.qm import get_lyrics
 import json
 
-if __name__ == "__main__":
+# app = QApplication(sys.argv)
 
-    # app = QApplication(sys.argv)
+app = Flask(__name__)
 
-    app = Flask(__name__)
+@app.route('/api/greet', methods=['GET'])
+def greet():
+    title = request.args.get('title', 'World')
+    return jsonify({'message': f'Hello, {title}!'})
 
-    @app.route('/api/greet', methods=['GET'])
-    def greet():
-        title = request.args.get('title', 'World')
-        return jsonify({'message': f'Hello, {title}!'})
-    
-    @app.route('/api/search', methods=['GET'])
-    def qrcsearch():
-        keyword = request.args.get('keyword', 'World')
-        searchRes = qm_search(keyword, SearchType.SONG, 1)
-        if searchRes:
-            lyrics = Lyrics(searchRes[0])
-            get_lyrics(lyrics)
-            # lyricRes = qm_get_lyrics(searchRes[0].get('title'), searchRes[0].get('artist'), searchRes[0].get('album'), searchRes[0].get('id'), searchRes[0].get('duration'))
-            serializable_list = [str(item) for item in lyrics]  # 将所有项转换为字符串
-            return jsonify(lyrics)
-            # return json.dumps(lyrics)
-        else:
-            jsonify({'message': 'no result'})
+@app.route('/api/search', methods=['GET'])
+def qrcsearch():
+    keyword = request.args.get('keyword', 'World')
+    searchRes = qm_search(keyword, SearchType.SONG, 1)
+    if searchRes:
+        lyrics = Lyrics(searchRes[0])
+        get_lyrics(lyrics)
+        # lyricRes = qm_get_lyrics(searchRes[0].get('title'), searchRes[0].get('artist'), searchRes[0].get('album'), searchRes[0].get('id'), searchRes[0].get('duration'))
+        serializable_list = [str(item) for item in lyrics]  # 将所有项转换为字符串
+        return jsonify(lyrics)
+        # return json.dumps(lyrics)
+    else:
+        jsonify({'message': 'no result'})
         
     # app.run()
     # appW.run(debug=True)
