@@ -2,13 +2,13 @@
 name = "LDDC"
 dynamic = ["version"]
 dependencies = [
-    "PySide6",
     "requests",
     "mutagen",
     "diskcache",
     "chardet",
     "pyaes",
     "psutil",
+    "Flask",
     "pyobjc; sys_platform == 'darwin'",
 ]
 requires-python = ">= 3.10"
