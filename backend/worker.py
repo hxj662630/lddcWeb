@@ -41,7 +41,6 @@ from utils.utils import (
     replace_info_placeholders,
 )
 from utils.version import compare_versions
-from view.msg_box import MsgBox
 
 from .api import (
     gh_get_latest_version,
@@ -62,36 +61,6 @@ from .song_info import get_audio_file_infos, parse_cue_from_file
 
 class CheckUpdateSignal(QObject):
     show_new_version_dialog = Signal(str, str, str, str)  # 版本号, 版本信息
-
-
-class CheckUpdate(QRunnable):
-    def __init__(self, is_auto: bool, name: str, repo: str, version: str) -> None:
-        super().__init__()
-        self.isAuto = is_auto
-        self.name = name
-        if repo.startswith("https://github.com/"):
-            repo = repo[len("https://github.com/"):]
-        self.repo = repo
-        self.version = version
-        self.signals = CheckUpdateSignal()
-
-    def run(self) -> None:
-        is_success, last_version, body = gh_get_latest_version(self.repo)
-        if is_success:
-
-            if compare_versions(self.version, last_version) == -1:
-                self.signals.show_new_version_dialog.emit(self.name, self.repo, last_version, body)
-            elif not self.isAuto:
-                in_main_thread(
-                    MsgBox.information, None,
-                    QCoreApplication.translate("CheckUpdate", "检查更新"), QCoreApplication.translate("CheckUpdate", "已经是最新版本"),
-                )
-        elif not self.isAuto:
-            in_main_thread(
-                MsgBox.critical, None, QCoreApplication.translate("CheckUpdate", "检查更新"),
-                QCoreApplication.translate("CheckUpdate", "检查更新失败，错误:{0}").format(last_version),
-            )
-
 
 class SearchSignal(QObject):
     error = Signal(str)
