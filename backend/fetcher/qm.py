@@ -7,7 +7,6 @@ from backend.decryptor import qrc_decrypt
 from backend.lyrics import Lyrics, LyricsData, LyricsLine, LyricsWord
 from utils.enum import QrcType
 from utils.error import LyricsProcessingError, LyricsRequestError
-from utils.logger import logger
 
 from .share import lrc2list, plaintext2list
 
@@ -55,8 +54,8 @@ def qrc_str_parse(lyric: str) -> tuple[dict, LyricsData]:
     if "[" in lyric and "]" in lyric:
         try:
             return lrc2list(lyric)
-        except Exception:
-            logger.exception("尝试将歌词以lrc格式解析时失败,解析为纯文本")
+        except Exception as e:
+            raise TypeError(e)
     return {}, plaintext2list(lyric)
 
 

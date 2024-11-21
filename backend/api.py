@@ -11,7 +11,6 @@ import requests
 
 from utils.enum import SearchType, Source
 from utils.error import LyricsRequestError
-from utils.logger import DEBUG, logger
 
 from .decryptor.eapi import (
     eapi_params_encrypt,
@@ -23,19 +22,16 @@ from .decryptor.eapi import (
 def gh_get_latest_version(repo: str) -> tuple[bool, str, str]:
     """获取GitHub仓库最新版本信息"""
     if repo.count("/") != 1 or not re.fullmatch(r"^[A-Za-z_0-9\-]+$", repo.replace("/", "")):
-        logger.error("仓库信息格式错误, repo: %s", repo)
         return False, "仓库信息格式错误", ""
     try:
         latest_release = requests.get(f"https://api.github.com/repos/{repo}/releases/latest", timeout=5).json()
     except Exception as e:
-        logger.exception("获取最新版本信息时错误")
         return False, str(e), ""
     else:
         if "tag_name" in latest_release:
             latest_version = latest_release["tag_name"]
             body = latest_release["body"]
             return True, latest_version, body
-        logger.error("获取最新版本信息失败, 响应: %s", latest_release)
         return False, f"获取最新版本信息失败, 响应: {latest_release}", ""
 
 
@@ -184,9 +180,7 @@ def ne_search(keyword: str, search_type: SearchType, page: str | int = 1) -> lis
                     'creator': songlist['creator']['nickname'],
                     'source': Source.NE,
                 })
-    logger.info("搜索成功")
-    if logger.level <= DEBUG:
-        logger.debug("搜索结果: %s", json.dumps(results, default=logging_json_default, ensure_ascii=False, indent=4))
+    
     return results
 
 
@@ -206,7 +200,6 @@ def ne_get_lyrics(songid: str | int) -> dict:
     try:
         data = _eapi_request("/eapi/song/lyric", params)
     except Exception as e:
-        logger.exception("请求歌词失败")
         msg = f"请求歌词失败: {e}"
         # raise LyricsRequestError(msg) from e
     return data
@@ -254,16 +247,13 @@ def ne_get_songlist(listid: str | int, list_type: str) -> str | list:
                         data = _eapi_request(path, params)
                         results.extend(nesonglist2result(data['songs']))
                     except Exception:
-                        logger.exception("网易云音乐接口请求失败")
                         continue
                     break
 
         if count != len(results):
-            logger.error("获取到的歌曲数量与实际数量不一致,预期: %s, 实际: %s", count, len(results))
             return "歌曲列表获取不完整"
 
     except Exception as e:
-        logger.exception("网易云音乐接口请求失败")
         return str(e)
     return results
 
@@ -346,12 +336,10 @@ def qm_get_lyrics(title: str, artist: list[str], album: str, id_: int, duration:
         response.raise_for_status()
         response_data: dict = response.json()['music.musichallSong.PlayLyricInfo.GetPlayLyricInfo']['data']
     except Exception as e:
-        logger.exception("请求歌词失败")
         msg = f"请求歌词失败: {e}"
         raise LyricsRequestError(msg) from e
     else:
-        if logger.level <= DEBUG:
-            logger.debug("请求qm歌词成功：%s, %s}", id_, json.dumps(response_data, default=logging_json_default, ensure_ascii=False, indent=4))
+        
         return response_data
 
 
@@ -440,9 +428,6 @@ def qm_search(keyword: str, search_type: SearchType, page: int | str = 1) -> lis
                     'count': artist['songNum'],  # 歌曲数量
                     'source': Source.QM,
                 })
-    logger.info("搜索成功")
-    if logger.level <= DEBUG:
-        logger.debug("搜索结果: %s", json.dumps(results, default=logging_json_default, ensure_ascii=False, indent=4))
     return results
 
 
@@ -474,25 +459,17 @@ def qm_get_album_song_list(album_mid: str) -> list | str:
         album_song_list = response_json["req_1"]["data"]["songList"]
         results = qmsonglist2result(album_song_list, "album")
         if response_json['req_1']['data']['totalNum'] != len(results):
-            logger.error("获取到的歌曲数量与实际数量不一致")
             return "专辑歌曲获取不完整"
 
     except requests.HTTPError as e:
-        logger.exception("请求专辑数据时错误")
         return str(e)
     except requests.RequestException as e:
-        logger.exception("请求专辑数据时错误")
         return str(e)
     except json.JSONDecodeError as e:
-        logger.exception("解析专辑数据时错误")
         return str(e)
     except Exception as e:
-        logger.exception("未知错误")
         return str(e)
     else:
-        logger.info("获取专辑信息成功")
-        if logger.level <= DEBUG:
-            logger.debug("获取结果: %s", json.dumps(results, default=logging_json_default, ensure_ascii=False, indent=4))
         return results
 
 
@@ -537,11 +514,8 @@ def qm_get_songlist_song_list(songlist_id: str) -> str | list:
         if response_json['req_0']['data']['total_song_num'] != len(results):
             return "获取歌曲列表失败, 返回的歌曲数量与实际数量不一致"
     except requests.exceptions.RequestException as e:
-        logger.exception("获取歌单失败")
         return str(e)
     else:
-        logger.info("获取歌单成功, 数量: %s", len(results))
-        logger.debug("获取歌单成功,获取结果: %s", results)
         return results
 
 
@@ -687,8 +661,6 @@ def kg_search(keyword: str, search_type: SearchType, info: dict | None = None, p
                     "score": lyric['score'],
                     "source": Source.KG,
                 })
-    if logger.level <= DEBUG:
-        logger.debug("搜索结果：%s", json.dumps(results, default=logging_json_default, ensure_ascii=False, indent=4))
     return results
 
 
@@ -727,10 +699,8 @@ def kg_get_songlist(listid: str | int, list_type: str) -> str | list:
         response_json = json.loads(re.findall(r"<!--KG_TAG_RES_START-->(.*)<!--KG_TAG_RES_END-->", response.text, re.DOTALL)[0])
         results = kgsonglist2result(response_json['data']['info'], "songlist")
     except Exception as e:
-        logger.exception("获取歌曲列表数据时错误")
         return str(e)
     else:
-        logger.info("获取歌曲列表数据成功")
         return results
 
 
@@ -750,9 +720,7 @@ def kg_get_lyrics(lyrsicid: str | int, access_key: str) -> bytes:
         response_json = response.json()
         krc = b64decode(response_json['content'])
     except Exception as e:
-        logger.exception("请求歌词失败")
         msg = f"请求歌词失败: {e}"
         raise LyricsRequestError(msg) from e
     else:
-        logger.info("获取歌词数据成功")
         return krc

@@ -11,7 +11,7 @@ import time
 from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING
 
 from .args import args
-from .paths import log_dir
+# from .paths import log_dir
 
 log_file = os.path.join(log_dir, f'{time.strftime("%Y.%m.%d",time.localtime())}.log')
 if not os.path.exists(os.path.dirname(log_file)):

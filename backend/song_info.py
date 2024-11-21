@@ -6,7 +6,6 @@ import re
 import mutagen
 
 from utils.error import GetSongInfoError
-from utils.logger import logger
 from utils.utils import read_unknown_encoding_file, time2ms
 
 file_extensions = ['3g2', 'aac', 'aif', 'ape', 'apev2', 'dff',
@@ -18,7 +17,6 @@ file_extensions = ['3g2', 'aac', 'aif', 'ape', 'apev2', 'dff',
 
 def get_audio_file_infos(file_path: str) -> list[dict]:
     if not os.path.isfile(file_path):
-        logger.error("未找到文件: %s", file_path)
         msg = f"未找到文件: {file_path}"
         raise GetSongInfoError(msg)
     try:
@@ -77,7 +75,6 @@ def get_audio_file_infos(file_path: str) -> list[dict]:
             raise GetSongInfoError(msg)
 
     except mutagen.MutagenError as e:    # type: ignore[reportPrivateImportUsage] mutagen中的MutagenError被误定义为私有 quodlibet/mutagen#647
-        logger.exception("%s获取文件信息失败", file_path)
         msg = f"获取文件信息失败:{e.__class__.__name__}: {e!s}"
         raise GetSongInfoError(msg) from e
     else:
@@ -86,13 +83,11 @@ def get_audio_file_infos(file_path: str) -> list[dict]:
 
 def get_audio_duration(file_path: str) -> int | None:
     if not os.path.isfile(file_path):
-        logger.error("未找到文件: %s", file_path)
         return None
     try:
         audio = mutagen.File(file_path)  # type: ignore[reportPrivateImportUsage] mutagen中的File被误定义为私有 quodlibet/mutagen#647
         return int(audio.info.length) if audio.info.length else None  # type: ignore[reportOptionalMemberAccess]
     except Exception:
-        logger.exception("%s获取文件时长失败", file_path)
         return None
 
 
@@ -205,8 +200,7 @@ def parse_cue(data: str, file_dir: str, file_path: str | None = None) -> tuple[l
                     cuedata["files"][-1]["tracks"][-1]["replaygain_track_peak"] = re.findall(r'^    REM REPLAYGAIN_TRACK_PEAK "(.*)"', line)[0]
                 else:
                     cuedata["files"][-1]["tracks"][-1]["replaygain_track_peak"] = re.findall(r'^    REM REPLAYGAIN_TRACK_PEAK (.*)', line)[0]
-        else:
-            logger.warning("解析cue时遇到未知的行: %s", line)
+        
 
     songs = []
     audio_file_paths = []
@@ -223,7 +217,6 @@ def parse_cue(data: str, file_dir: str, file_path: str | None = None) -> tuple[l
                         and os.path.isfile(audio_file_path)):
                     break
             else:
-                logger.warning("未找到音频文件: %s", file["filename"])
                 audio_file_path = ""
 
         if os.path.isfile(audio_file_path):
@@ -231,7 +224,6 @@ def parse_cue(data: str, file_dir: str, file_path: str | None = None) -> tuple[l
 
         for i, track in enumerate(file["tracks"]):
             if "title" not in track:
-                logger.warning("未找到标题, 跳过第%s首", i + 1)
                 continue
             songs.append({"title": track["title"],
                           "artist": None,

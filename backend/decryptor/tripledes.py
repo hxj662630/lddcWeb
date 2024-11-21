@@ -4,7 +4,7 @@
 
 # SPDX-FileCopyrightText: Copyright (c) 2024 沉默の金 <cmzj@cmzj.org>
 # SPDX-License-Identifier: GPL-3.0-only
-from utils.cache import cache
+# from utils.cache import cache
 
 ENCRYPT = 1
 DECRYPT = 0
@@ -243,7 +243,7 @@ def key_schedule(key: bytes, mode: int) -> list[list[int]]:
     return schedule
 
 
-@cache.memoize()
+# @cache.memoize()
 def tripledes_key_setup(key: bytes, mode: int) -> list[list[list[int]]]:
     if mode == ENCRYPT:
         return [key_schedule(key[0:], ENCRYPT),

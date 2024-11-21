@@ -38,8 +38,6 @@ from backend.fetcher import get_lyrics
 from backend.lyrics import Lyrics
 from utils.args import args
 from utils.enum import LyricsFormat, LyricsType, Source
-from utils.logger import DEBUG, logger
-from utils.paths import auto_save_dir, command_line
 from utils.utils import escape_filename, get_artist_str, has_content
 # from view.desktop_lyrics import DesktopLyrics, DesktopLyricsWidget
 
@@ -74,13 +72,11 @@ class ServiceInstanceBase(QRunnable):
 
     def stop(self) -> None:
         self.loop.quit()
-        logger.info("Service instance %s stopped", self.instance_id)
         instance_dict_mutex.lock()
         del instance_dict[self.instance_id]
         instance_dict_mutex.unlock()
 
     def run(self) -> None:
-        logger.info("Service instance %s started", self.instance_id)
         self.signals.handle_task.connect(self.handle_task)
         self.loop = QEventLoop()
         self.init()

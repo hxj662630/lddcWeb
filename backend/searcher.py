@@ -4,7 +4,7 @@ from typing import Any
 
 import requests
 
-from utils.cache import cache
+# from utils.cache import cache
 from utils.enum import SearchType, Source
 
 from .api import (
@@ -21,7 +21,8 @@ def search(keyword: str,
            page: int = 1) -> list[dict[str, Any]]:
 
     cache_key = (search_type, source, keyword, info, page)
-    results = cache.get(cache_key)
+    # results = cache.get(cache_key)
+    results = ''
     if results is not None and isinstance(results, list):
         return results
     results = []
@@ -62,5 +63,5 @@ def search(keyword: str,
     else:
         raise error
 
-    cache.set(cache_key, results, 216000)
+    # cache.set(cache_key, results, 216000)
     return results
