@@ -1,11 +1,8 @@
 # SPDX-FileCopyrightText: Copyright (c) 2024 沉默の金 <cmzj@cmzj.org>
 # SPDX-License-Identifier: GPL-3.0-only
-import sys
 # from PySide6.QtCore import QThread
 # from PySide6.QtWidgets import QApplication
 # from backend.service import LDDCService
-from res import resource_rc
-from utils.args import args
 # from utils.exit_manager import exit_manager
 from utils.enum import SearchType
 from flask import Flask, jsonify, request
@@ -13,10 +10,6 @@ from backend.api import qm_search
 from backend.lyrics import Lyrics, LyricsData
 from backend.fetcher.qm import get_lyrics
 import json
-
-
-resource_rc.qInitResources()
-
 
 if __name__ == "__main__":
 
