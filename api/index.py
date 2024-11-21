@@ -17,14 +17,14 @@ if __name__ == "__main__":
 
     # app = QApplication(sys.argv)
 
-    appW = Flask(__name__)
+    app = Flask(__name__)
 
-    @appW.route('/api/greet', methods=['GET'])
+    @app.route('/api/greet', methods=['GET'])
     def greet():
         title = request.args.get('title', 'World')
         return jsonify({'message': f'Hello, {title}!'})
     
-    @appW.route('/api/search', methods=['GET'])
+    @app.route('/api/search', methods=['GET'])
     def qrcsearch():
         keyword = request.args.get('keyword', 'World')
         searchRes = qm_search(keyword, SearchType.SONG, 1)
@@ -38,7 +38,7 @@ if __name__ == "__main__":
         else:
             jsonify({'message': 'no result'})
         
-    appW.run()
+    # app.run()
     # appW.run(debug=True)
     # if args.get_service_port:
         # 如果是获取服务端口,则只需实例化LDDCService(会获取并打印另一个LDDC进程服务端口),然后退出
