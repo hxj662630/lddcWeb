@@ -16,6 +16,7 @@ import json
 # app = QApplication(sys.argv)
 
 app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
 
 @app.route('/api/greet', methods=['GET'])
 def greet():
@@ -30,8 +31,9 @@ def qrcsearch():
         lyrics = Lyrics(searchRes[0])
         get_lyrics(lyrics)
         # lyricRes = qm_get_lyrics(searchRes[0].get('title'), searchRes[0].get('artist'), searchRes[0].get('album'), searchRes[0].get('id'), searchRes[0].get('duration'))
-        serializable_list = [str(item) for item in lyrics]  # 将所有项转换为字符串
-        return jsonify(lyrics)
+        # serializable_list = [str(item) for item in lyrics]  # 将所有项转换为字符串
+        serializable_list = json.dumps(lyrics,ensure_ascii=False)
+        return serializable_list
         # return json.dumps(lyrics)
     else:
         jsonify({'message': 'no result'})
