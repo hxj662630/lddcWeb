@@ -208,7 +208,7 @@ def ne_get_lyrics(songid: str | int) -> dict:
     except Exception as e:
         logger.exception("请求歌词失败")
         msg = f"请求歌词失败: {e}"
-        raise LyricsRequestError(msg) from e
+        # raise LyricsRequestError(msg) from e
     return data
 
 

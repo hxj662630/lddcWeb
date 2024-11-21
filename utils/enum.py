@@ -3,9 +3,6 @@
 from enum import Enum
 from typing import Any
 
-from PySide6.QtCore import QCoreApplication
-
-
 class QrcType(Enum):
     LOCAL = 0
     CLOUD = 1
@@ -58,20 +55,20 @@ class Source(Enum):
         msg = f"Object of type {o.__class__.__name__} is not JSON serializable"
         raise TypeError(msg)
 
-    def __str__(self) -> str:
-        match self:
-            case Source.MULTI:
-                return QCoreApplication.translate("Source", "聚合")
-            case Source.QM:
-                return QCoreApplication.translate("Source", "QQ音乐")
-            case Source.KG:
-                return QCoreApplication.translate("Source", "酷狗音乐")
-            case Source.NE:
-                return QCoreApplication.translate("Source", "网易云音乐")
-            case Source.Local:
-                return QCoreApplication.translate("Source", "本地")
-            case _:
-                return str(self.name)
+    # def __str__(self) -> str:
+    #     match self:
+    #         case Source.MULTI:
+    #             return QCoreApplication.translate("Source", "聚合")
+    #         case Source.QM:
+    #             return QCoreApplication.translate("Source", "QQ音乐")
+    #         case Source.KG:
+    #             return QCoreApplication.translate("Source", "酷狗音乐")
+    #         case Source.NE:
+    #             return QCoreApplication.translate("Source", "网易云音乐")
+    #         case Source.Local:
+    #             return QCoreApplication.translate("Source", "本地")
+    #         case _:
+    #             return str(self.name)
 
 
 class LocalMatchSaveMode(Enum):

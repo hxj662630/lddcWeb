@@ -1,9 +1,8 @@
 # SPDX-FileCopyrightText: Copyright (c) 2024 沉默の金 <cmzj@cmzj.org>
 # SPDX-License-Identifier: GPL-3.0-only
-from PySide6.QtCore import QObject
 
 
-class ErrorMsgTranslator(QObject):
+class ErrorMsgTranslator():
     """错误信息翻译器"""
 
     def translate(self, msg: str) -> str:
@@ -60,57 +59,57 @@ class ErrorMsgTranslator(QObject):
 translator = ErrorMsgTranslator()
 
 
-class LyricsRequestError(Exception):
+class LyricsRequestError():
     """歌词请求错误"""
 
     def __init__(self, msg: str) -> None:
-        super().__init__(translator.translate(msg))
+        translator.translate(msg)
 
 
-class LyricsProcessingError(Exception):
+class LyricsProcessingError():
     """歌词处理错误"""
 
     def __init__(self, msg: str) -> None:
-        super().__init__(translator.translate(msg))
+        translator.translate(msg)
 
 
-class LyricsNotFoundError(LyricsProcessingError):
+class LyricsNotFoundError():
     """歌词未找到错误"""
 
     def __init__(self, msg: str) -> None:
-        super().__init__(translator.translate(msg))
+        translator.translate(msg)
 
 
-class LyricsDecryptError(LyricsProcessingError):
+class LyricsDecryptError():
     """歌词解密错误"""
 
     def __init__(self, msg: str) -> None:
-        super().__init__(translator.translate(msg))
+        translator.translate(msg)
 
 
-class LyricsFormatError(LyricsProcessingError):
+class LyricsFormatError():
     """歌词格式错误"""
 
     def __init__(self, msg: str) -> None:
-        super().__init__(translator.translate(msg))
+        translator.translate(msg)
 
 
-class DecodingError(Exception):
+class DecodingError():
     """解码错误"""
 
     def __init__(self, msg: str) -> None:
-        super().__init__(translator.translate(msg))
+        translator.translate(msg)
 
 
-class LyricsUnavailableError(Exception):
+class LyricsUnavailableError():
     """获取的歌词不可用"""
 
     def __init__(self, msg: str) -> None:
-        super().__init__(translator.translate(msg))
+        translator.translate(msg)
 
 
-class GetSongInfoError(Exception):
+class GetSongInfoError():
     """获取歌曲信息错误"""
 
     def __init__(self, msg: str) -> None:
-        super().__init__(translator.translate(msg))
+        translator.translate(msg)

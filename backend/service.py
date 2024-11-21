@@ -14,36 +14,32 @@ from random import SystemRandom
 from typing import Literal
 
 import psutil
-from PySide6.QtCore import (
-    QCoreApplication,
-    QEventLoop,
-    QMutex,
-    QObject,
-    QRunnable,
-    QSharedMemory,
-    Qt,
-    QTimer,
-    Signal,
-)
-from PySide6.QtNetwork import (
-    QHostAddress,
-    QLocalServer,
-    QLocalSocket,
-    QTcpServer,
-    QTcpSocket,
-)
+# from PySide6.QtCore import (
+#     QCoreApplication,
+#     QEventLoop,
+#     QMutex,
+#     QObject,
+#     QRunnable,
+#     QSharedMemory,
+#     Qt,
+#     QTimer,
+#     Signal,
+# )
+# from PySide6.QtNetwork import (
+#     QHostAddress,
+#     QLocalServer,
+#     QLocalSocket,
+#     QTcpServer,
+#     QTcpSocket,
+# )
 
 from backend.calculate import find_closest_match
-from backend.converter import convert2
 from backend.fetcher import get_lyrics
 from backend.lyrics import Lyrics
-from backend.worker import AutoLyricsFetcher
 from utils.args import args
-from utils.data import cfg, local_song_lyrics
 from utils.enum import LyricsFormat, LyricsType, Source
 from utils.logger import DEBUG, logger
 from utils.paths import auto_save_dir, command_line
-from utils.thread import in_main_thread, threadpool
 from utils.utils import escape_filename, get_artist_str, has_content
 # from view.desktop_lyrics import DesktopLyrics, DesktopLyricsWidget
 

@@ -11,7 +11,6 @@ import time
 from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING
 
 from .args import args
-from .data import cfg
 from .paths import log_dir
 
 log_file = os.path.join(log_dir, f'{time.strftime("%Y.%m.%d",time.localtime())}.log')
@@ -42,7 +41,7 @@ class Logger:
     def __init__(self) -> None:
         self.name = 'LDDC'
         self.__logger = logging.getLogger(self.name)
-        self.level = str2log_level(cfg["log_level"])
+        self.level = str2log_level('WARNING')
 
         formatter = logging.Formatter('[%(levelname)s]%(asctime)s- %(module)s(%(lineno)d) - %(funcName)s:%(message)s')
         # 创建一个处理器,用于将日志写入文件

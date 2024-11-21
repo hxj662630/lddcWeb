@@ -38,9 +38,8 @@ if __name__ == "__main__":
         else:
             jsonify({'message': 'no result'})
         
-
-
-    appW.run(debug=True)
+    appW.run()
+    # appW.run(debug=True)
     # if args.get_service_port:
         # 如果是获取服务端口,则只需实例化LDDCService(会获取并打印另一个LDDC进程服务端口),然后退出
         # LDDCService()
