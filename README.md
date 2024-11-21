@@ -1,4 +1,4 @@
-# LDDC
+# LDDC web version
 
 中文 | [English](./README_en.md)
 
