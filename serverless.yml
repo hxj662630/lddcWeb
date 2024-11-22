@@ -1,0 +1,30 @@
+component: http
+name: http-flask-TXQ7H_kilx
+inputs:
+  src:
+    dist: ./
+    exclude:
+      - .env
+    hook: pip3 install -r requirements.txt -t ./
+  region: ap-guangzhou
+  faas:
+    framework: flask
+    name: '${name}'
+    runtime: Python3.10
+    events:
+      - http:
+          parameters:
+            netConfig:
+              enableIntranet: false
+              enableExtranet: true
+            qualifier: $DEFAULT
+            authType: NONE
+    eip: true
+    timeout: 3
+    memorySize: 512
+    tags: []
+    environments: []
+  isAutoCiDeploy: false
+org: '1259088058'
+app: qrcapi
+stage: dev
