@@ -28,6 +28,9 @@ def qrcsearch():
         get_lyrics(lyrics)
         # lyricRes = qm_get_lyrics(searchRes[0].get('title'), searchRes[0].get('artist'), searchRes[0].get('album'), searchRes[0].get('id'), searchRes[0].get('duration'))
         # serializable_list = [str(item) for item in lyrics]  # 将所有项转换为字符串
+        lyrics['title']=searchRes[0]['title']
+        lyrics['artist']=searchRes[0]['artist']
+        lyrics['duration']=searchRes[0]['duration']
         serializable_list = json.dumps(lyrics,ensure_ascii=False)
         return serializable_list
         # return json.dumps(lyrics)
